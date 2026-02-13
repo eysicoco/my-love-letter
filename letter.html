@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>A letter for you 🌸</title>
 
 <style>
-* { box-sizing: border-box; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
   margin: 0;
@@ -14,91 +14,210 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #ffd6e8, #e0c3fc, #c2f0fc);
+  /* Animated Gradient Background */
+  background: linear-gradient(45deg, #ffd6e8, #e0c3fc, #c2f0fc, #ffd6e8);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
   font-family: "Segoe UI", sans-serif;
   overflow: hidden;
 }
 
-/* floating flowers */
-.flower {
-  position: absolute;
-  font-size: 18px;
-  animation: float 7s linear infinite;
-  opacity: 0.7;
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
-@keyframes float { from { transform: translateY(110vh); } to { transform: translateY(-10vh); } }
 
-/* sparkles */
-.sparkle {
+/* Floating Elements with Rotation */
+.floating-item {
   position: absolute;
-  font-size: 14px;
-  animation: sparkle 2s linear infinite;
-  opacity: 0.8;
+  bottom: -10%;
+  animation: floatUp 10s linear infinite;
+  opacity: 0.6;
+  will-change: transform;
+  pointer-events: none;
 }
-@keyframes sparkle { 0% {opacity:0; transform:scale(0.5);} 50% {opacity:1; transform:scale(1.2);} 100% {opacity:0; transform:scale(0.5);} }
 
-/* confetti hearts */
-.confetti {
+@keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-120vh) rotate(360deg); }
+}
+
+/* Interactive Ripple Particle */
+.ripple {
   position: absolute;
-  font-size: 14px;
-  animation: confetti 1.8s ease-out forwards;
+  pointer-events: none;
+  font-size: 20px;
+  animation: rippleOut 0.8s ease-out forwards;
+  z-index: 100;
 }
-@keyframes confetti { to { transform: translateY(-150px) rotate(360deg); opacity:0; } }
+@keyframes rippleOut {
+  0% { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(2.5) translateY(-20px); opacity: 0; }
+}
 
-/* envelope container */
+/* Clouds for depth */
+.cloud {
+  position: absolute;
+  background: white;
+  filter: blur(30px);
+  opacity: 0.3;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Envelope Container */
 .envelope {
-  width: 92vw;
-  max-width: 360px;
-  height: 120px;
+  width: 90vw;
+  max-width: 350px;
+  height: 150px;
   position: relative;
   cursor: pointer;
-  perspective: 800px;
-  transition: height 1s ease;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
 }
-.envelope.expand { height: 320px; }
+.envelope.open { height: 380px; transform: translateY(-20px); }
 
-/* envelope body */
 .envelope-body {
   width: 100%;
   height: 100%;
-  background: linear-gradient(145deg, #fff6fb, #ffe3f1);
-  border-radius: 18px;
-  box-shadow: 0 12px 30px rgba(255,105,180,0.25),
-              inset 0 2px 6px rgba(255,255,255,0.9);
+  background: #fffafc;
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(255,105,180,0.2);
   position: absolute;
-  overflow: hidden;
-}
-.envelope-body::before {
-  content: "";
-  position: absolute;
-  inset: 8px;
-  border-radius: 14px;
-  border: 2px dashed rgba(255,150,200,0.5);
+  border: 1px solid #ffe3f1;
 }
 
-/* flap */
 .flap {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: linear-gradient(145deg, #ffd6e8, #ffc2dd);
-  clip-path: polygon(0 0, 100% 0, 50% 65%);
-  border-radius: 18px 18px 0 0;
+  background: #ffd6e8;
+  clip-path: polygon(0 0, 100% 0, 50% 60%);
+  border-radius: 15px 15px 0 0;
   transform-origin: top;
-  transition: transform 1s ease;
-  box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+  transition: transform 0.5s ease;
   z-index: 3;
 }
+.envelope.open .flap { transform: rotateX(160deg); }
 
-/* inner paper */
 .paper {
   position: absolute;
   width: 92%;
-  height: 90%;
-  top: 8px;
+  height: 88%;
+  top: 8%;
   left: 4%;
-  background: #fffafc;
-  border-radius: 14px;
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  z-index: 2;
+}
+.envelope.open .paper { opacity: 1; visibility: visible; z-index: 4; }
+
+.photo-frame {
+  width: 100%;
+  height: 120px;
+  background: #fff;
+  padding: 5px;
+  border: 1px solid #eee;
+  margin-bottom: 10px;
+}
+.photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+.title { text-align: center; font-weight: bold; color: #ff6fa5; margin-bottom: 10px; }
+#typed { font-size: 0.95rem; line-height: 1.4; color: #444; white-space: pre-line; }
+
+</style>
+</head>
+<body onclick="createRipple(event)">
+
+<div class="cloud" style="width: 200px; height: 100px; top: 10%; left: -50px;"></div>
+<div class="cloud" style="width: 300px; height: 150px; bottom: 5%; right: -50px;"></div>
+
+<div class="floating-item" style="left:5%; font-size: 25px;">✨</div>
+<div class="floating-item" style="left:25%; animation-delay:2s; font-size: 30px;">🌸</div>
+<div class="floating-item" style="left:55%; animation-delay:5s; font-size: 20px;">☁️</div>
+<div class="floating-item" style="left:85%; animation-delay:1s; font-size: 28px;">🌷</div>
+
+<div class="envelope" id="myEnvelope" onclick="toggleLetter(event)">
+  <div class="flap"></div>
+  <div class="envelope-body"></div>
+
+  <div class="paper" onclick="event.stopPropagation()">
+    <div class="photo-frame">
+      <img src="photo.jpg" alt="love">
+    </div>
+    <div class="title">For You 💌</div>
+    <div id="typed"></div>
+  </div>
+</div>
+
+<audio id="music" loop>
+  <source src="Cinnamon.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+let i = 0;
+let isTyping = false;
+const text = `Hi love,
+
+I made this just for you.
+I hope this makes your day a bit brighter.
+
+Thank you for being someone warm, kind, and special in my life.
+
+No matter how busy things get, remember someone is always cheering for you.
+
+— Allen 🌸`;
+
+function typeWriter() {
+  if (i < text.length) {
+    document.getElementById("typed").innerHTML += text.charAt(i);
+    i++;
+    setTimeout(typeWriter, 40);
+  }
+}
+
+// Background Interaction Logic
+function createRipple(e) {
+  const ripple = document.createElement("div");
+  ripple.className = "ripple";
+  // Random emoji for each tap
+  const emojis = ["❤️", "✨", "💖", "🌸", "☁️"];
+  ripple.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+  
+  ripple.style.left = (e.clientX || e.touches[0].clientX) - 10 + "px";
+  ripple.style.top = (e.clientY || e.touches[0].clientY) - 10 + "px";
+  
+  document.body.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 800);
+}
+
+function toggleLetter(e) {
+  const el = document.getElementById("myEnvelope");
+  const music = document.getElementById("music");
+
+  if (!el.classList.contains("open")) {
+    el.classList.add("open");
+    music.volume = 0.4;
+    music.play().catch(() => {});
+
+    if (!isTyping) {
+        isTyping = true;
+        setTimeout(typeWriter, 600);
+    }
+  } else {
+    el.classList.remove("open");
+  }
+}
+</script>
+</body>
+</html>
   box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
   padding: 14px;
   opacity: 0;
