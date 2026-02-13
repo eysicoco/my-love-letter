@@ -204,6 +204,23 @@ font-family: 'Quicksand', sans-serif; /* Clean, rounded, and modern */
 <script>
 let i = 0;
 let isTyping = false;
+let userHasScrolledUp = false; // New flag
+
+// Detect if the user is scrolling up manually
+const paper = document.querySelector(".paper");
+paper.addEventListener('wheel', checkScroll);
+paper.addEventListener('touchmove', checkScroll);
+
+function checkScroll() {
+  // If the user scrolls up, we stop the auto-scroll
+  // 50px buffer to detect if they aren't at the bottom anymore
+  if (paper.scrollTop + paper.clientHeight < paper.scrollHeight - 50) {
+    userHasScrolledUp = true;
+  } else {
+    userHasScrolledUp = false;
+  }
+}
+
 const text = `On this special day, I wanted to put my heart into words. I know life has been a blur lately, but you are the constant that keeps me grounded.
 
 Hi! I made this just for you, sana magustuhan mo (very rushed na ito kasi always busy po😭). Anway, I made it dahil today is Valentine's Day!!🥰
@@ -226,23 +243,20 @@ Again, Happy Valentine's Day to my special person!❤️
 
 
 function typeWriter() {
-  const paper = document.querySelector(".paper");
   const typedElement = document.getElementById("typed");
 
   if (i < text.length) {
-    // We use a span to give it that slight fade-in look if you used the CSS above
     const char = text.charAt(i);
     typedElement.innerHTML += char;
     i++;
     
-    // Smooth auto-scroll logic
-    // We use requestAnimationFrame for a jitter-free experience
-    requestAnimationFrame(() => {
+    // Only auto-scroll if the user hasn't manually scrolled up to read
+    if (!userHasScrolledUp) {
       paper.scrollTop = paper.scrollHeight;
-    });
+    }
     
-    // Varying the speed slightly (randomly) makes it feel more "human" and smooth
-    let speed = char === "." || char === "!" || char === "?" ? 400 : 45;
+    // Natural pausing logic
+    let speed = (char === "." || char === "!" || char === "?") ? 400 : 35;
     setTimeout(typeWriter, speed);
   }
 }
