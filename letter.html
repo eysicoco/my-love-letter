@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>A letter for you 🌸</title>
@@ -129,8 +132,45 @@ body {
 }
 .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
 
-.title { text-align: center; font-weight: bold; color: #ff6fa5; margin-bottom: 10px; }
-#typed { font-size: 0.95rem; line-height: 1.4; color: #444; white-space: pre-line; }
+font-family: 'Quicksand', sans-serif; /* Clean, rounded, and modern */
+}
+
+.title { 
+  text-align: center; 
+  font-family: 'Pacifico', cursive; /* Simple, readable script */
+  font-size: 1.8rem; 
+  color: #ff6fa5; 
+  margin-bottom: 10px; 
+}
+
+#typed { 
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 400;
+  font-size: 1rem; 
+  line-height: 1.6; 
+  color: #444; 
+  white-space: pre-line; 
+  text-align: justify;
+}
+
+/* Smooth scrolling for the paper container */
+.paper {
+  scroll-behavior: smooth;
+}
+
+/* Optional: subtle fade-in for characters */
+.char {
+  animation: fadeIn 0.1s forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+
 
 </style>
 </head>
@@ -152,7 +192,7 @@ body {
     <div class="photo-frame">
       <img src="photo.jpg" alt="love">
     </div>
-    <div class="title">For You 💌</div>
+    <div class="title">To My Clarisse 💌</div>
     <div id="typed"></div>
   </div>
 </div>
@@ -164,24 +204,49 @@ body {
 <script>
 let i = 0;
 let isTyping = false;
-const text = `Hi love,
+const text = `On this special day, I wanted to put my heart into words. I know life has been a blur lately, but you are the constant that keeps me grounded.
 
-I made this just for you.
-I hope this makes your day a bit brighter.
+Hi! I made this just for you, sana magustuhan mo (very rushed na ito kasi always busy po😭). Anway, I made it dahil today is Valentine's Day!!🥰
 
-Thank you for being someone warm, kind, and special in my life.
+Happy Valentine's Day Baby!😙❤️
 
-No matter how busy things get, remember someone is always cheering for you.
+I wish and I hope na kung ano man tayo ngayon ay sana hindi matapos or magbago, lalo na yung sigla at saya kapag magkasama tayo. I always love you poooo. Everything you've done for me and for us, lahat yon I appreciated it. Even the gifts na nareceive ko mula sa'yo 🥹 Kapag naiisip ko yon naiiyak ako kasi bihira lang, and almost none talaga na birthdays ko na may nag gift sa'kin, especially from someone I like and love.
+
+The way na kung paano ka makitungo sa akin hanggang ngayon, this is why and how I very love you. Natatandaan ko naman mga sinasabi at pinapayo mo sa'kin lalo na nitong mga nakalipas na hindi ako nagiging ok sa sarili ko at sa ating dalawa. I'm adjusting myself and trying na mas maging maayos at better for you.
+
+You always make me smile Clarisse, sa lahat ng oras masaya lang kita nakikita pag magkasama tayo lalo't ngayon na mas malalim na kung anong meron tayo. I will always listen sa lahat ng rants at mga problema mo, even sa mga kwento mong walang katapusannnnnn na never ko pinagsawaan dahil mas natutuwa ako pakinggan ka, nakikita ko na you're just you kapag kasama mo'ko.
+
+I admire you so much sa mga bagay na nagagawa mo at sa kung sino ka, I love everything about you❤️
+
+Thank you for being my safe place and my greatest adventure. Kahit busy ang mundo, sa’yo lang laging uuwi ang puso ko.
+
+Again, Happy Valentine's Day to my special person!❤️
 
 — Allen 🌸`;
 
+
 function typeWriter() {
+  const paper = document.querySelector(".paper");
+  const typedElement = document.getElementById("typed");
+
   if (i < text.length) {
-    document.getElementById("typed").innerHTML += text.charAt(i);
+    // We use a span to give it that slight fade-in look if you used the CSS above
+    const char = text.charAt(i);
+    typedElement.innerHTML += char;
     i++;
-    setTimeout(typeWriter, 40);
+    
+    // Smooth auto-scroll logic
+    // We use requestAnimationFrame for a jitter-free experience
+    requestAnimationFrame(() => {
+      paper.scrollTop = paper.scrollHeight;
+    });
+    
+    // Varying the speed slightly (randomly) makes it feel more "human" and smooth
+    let speed = char === "." || char === "!" || char === "?" ? 400 : 45;
+    setTimeout(typeWriter, speed);
   }
 }
+
 
 // Background Interaction Logic
 function createRipple(e) {
